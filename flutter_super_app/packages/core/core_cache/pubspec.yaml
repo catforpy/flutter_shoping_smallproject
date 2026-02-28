@@ -1,0 +1,28 @@
+name: core_cache
+description: Core cache package for Flutter super app. Provides in-memory and persistent caching.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.2.2
+
+  # Core dependencies
+  core_base:
+    path: ../core_base
+  core_utils:
+    path: ../core_utils
+  core_exceptions:
+    path: ../core_exceptions
+  core_logging:
+    path: ../core_logging
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

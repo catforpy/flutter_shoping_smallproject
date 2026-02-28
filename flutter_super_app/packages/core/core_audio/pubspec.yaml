@@ -1,0 +1,28 @@
+name: core_audio
+description: Audio handling package for Flutter super app. Provides audio player and recorder controllers.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Core dependencies
+  core_base:
+    path: ../core_base
+  core_utils:
+    path: ../core_utils
+
+  # Audio dependencies
+  just_audio: ^0.9.40
+  record: ^6.2.0
+  permission_handler: ^11.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

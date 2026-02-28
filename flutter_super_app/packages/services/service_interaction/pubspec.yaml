@@ -1,0 +1,25 @@
+name: service_interaction
+description: Highly extensible interaction service for the super app - supports like, favorite, share and custom interactions across all domains.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Core packages
+  core_base:
+    path: ../../core/core_base
+  core_network:
+    path: ../../core/core_network
+  core_logging:
+    path: ../../core/core_logging
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

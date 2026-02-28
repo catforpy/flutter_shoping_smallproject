@@ -1,0 +1,37 @@
+name: core_media_example
+description: An example app for core_media package
+publish_to: none
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core_media:
+    path: ../
+  core_ui:
+    path: ../../core_ui
+  core_audio:
+    path: ../../core_audio
+  core_image:
+    path: ../../core_image
+
+  # 权限请求
+  permission_handler: ^11.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # 添加 assets 配置
+  assets:
+    - assets/videos/

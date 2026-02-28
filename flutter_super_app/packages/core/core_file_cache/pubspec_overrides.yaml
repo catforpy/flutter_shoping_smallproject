@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: core_logging,core_utils
+dependency_overrides:
+  core_logging:
+    path: ../core_logging
+  core_utils:
+    path: ../core_utils

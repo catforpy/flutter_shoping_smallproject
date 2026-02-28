@@ -1,0 +1,85 @@
+name: app_main
+description: Flutter 超级应用主应用
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Router
+  go_router: ^14.6.2
+
+  # UI
+  cupertino_icons: ^1.0.8
+  flutter_pickers: ^2.2.0
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.3.0
+
+  # UI 模块
+  ui_templates:
+    path: ../../packages/ui/ui_templates
+  ui_builder:
+    path: ../../packages/ui/ui_builder
+  ui_components:
+    path: ../../packages/ui/ui_components
+  ui_extensions:
+    path: ../../packages/ui/ui_extensions
+
+  # Services
+  service_auth:
+    path: ../../packages/services/service_auth
+  service_user:
+    path: ../../packages/services/service_user
+  service_interaction:
+    path: ../../packages/services/service_interaction
+  service_comment:
+    path: ../../packages/services/service_comment
+  service_content:
+    path: ../../packages/services/service_content
+  service_commerce:
+    path: ../../packages/services/service_commerce
+  service_payment:
+    path: ../../packages/services/service_payment
+  service_im:
+    path: ../../packages/services/service_im
+
+  # Core
+  core_base:
+    path: ../../packages/core/core_base
+  core_router:
+    path: ../../packages/core/core_router
+  core_ui:
+    path: ../../packages/core/core_ui
+  core_file_cache:
+    path: ../../packages/core/core_file_cache
+  core_media:
+    path: ../../packages/core/core_media
+  core_rich_text:
+    path: ../../packages/core/core_rich_text
+
+  # Media
+  video_player: ^2.9.0
+
+  # Rich Text Editor
+  flutter_quill: ^11.0.0
+  flutter_quill_extensions: ^11.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/

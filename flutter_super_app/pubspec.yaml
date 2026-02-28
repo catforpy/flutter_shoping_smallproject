@@ -1,0 +1,11 @@
+name: flutter_super_app
+publish_to: none
+description: Flutter 超大型项目 - Monorepo 架构
+version: 1.0.0
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+# Melos - 管理 Monorepo
+dev_dependencies:
+  melos: ^6.3.2

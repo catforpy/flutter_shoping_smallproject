@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: core_constants,core_exceptions
+dependency_overrides:
+  core_constants:
+    path: ../core_constants
+  core_exceptions:
+    path: ../core_exceptions

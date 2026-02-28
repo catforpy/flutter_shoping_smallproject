@@ -1,0 +1,34 @@
+# melos_managed_dependency_overrides: core_audio,core_base,core_cache,core_constants,core_database,core_exceptions,core_image,core_logging,core_media,core_network,core_ui,core_utils,service_comment,service_content,service_interaction,service_user
+dependency_overrides:
+  core_audio:
+    path: ../core_audio
+  core_base:
+    path: ../core_base
+  core_cache:
+    path: ../core_cache
+  core_constants:
+    path: ../core_constants
+  core_database:
+    path: ../core_database
+  core_exceptions:
+    path: ../core_exceptions
+  core_image:
+    path: ../core_image
+  core_logging:
+    path: ../core_logging
+  core_media:
+    path: ../core_media
+  core_network:
+    path: ../core_network
+  core_ui:
+    path: ../core_ui
+  core_utils:
+    path: ../core_utils
+  service_comment:
+    path: ../../services/service_comment
+  service_content:
+    path: ../../services/service_content
+  service_interaction:
+    path: ../../services/service_interaction
+  service_user:
+    path: ../../services/service_user

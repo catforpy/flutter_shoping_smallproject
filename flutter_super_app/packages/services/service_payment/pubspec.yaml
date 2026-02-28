@@ -1,0 +1,31 @@
+name: service_payment
+description: Highly extensible payment service for the super app - supports recharge, transactions, and multiple payment methods.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Core packages
+  core_base:
+    path: ../../core/core_base
+  core_network:
+    path: ../../core/core_network
+  core_logging:
+    path: ../../core/core_logging
+
+  # Services
+  service_user:
+    path: ../service_user
+  service_commerce:
+    path: ../service_commerce
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

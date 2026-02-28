@@ -1,0 +1,39 @@
+name: ui_components
+description: UI 组件库 - 可复用的 UI 组件
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # UI 效果
+  shimmer: ^3.0.0
+  lottie: ^3.0.0
+
+  # 图片相关
+  cached_network_image: ^3.4.0
+
+  # UI 扩展方法
+  ui_extensions:
+    path: ../ui_extensions
+
+  # Core dependencies
+  core_base:
+    path: ../../core/core_base
+  core_utils:
+    path: ../../core/core_utils
+  core_ui:
+    path: ../../core/core_ui
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

@@ -1,0 +1,39 @@
+name: ui_builder
+description: UI 构建器 - 配置驱动的页面构建系统
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # JSON 序列化
+  json_annotation: ^4.9.0
+
+  # UI 模版
+  ui_templates:
+    path: ../ui_templates
+
+  # UI 组件
+  ui_components:
+    path: ../ui_components
+
+  # Core dependencies
+  core_base:
+    path: ../../core/core_base
+  core_utils:
+    path: ../../core/core_utils
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.0
+  json_serializable: ^6.8.0

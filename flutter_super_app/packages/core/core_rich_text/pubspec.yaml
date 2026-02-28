@@ -1,0 +1,33 @@
+name: core_rich_text
+description: Universal rich text editor with Quill support for images, videos, and custom embeds.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Quill editor
+  flutter_quill: ^11.5.0
+  flutter_quill_extensions: ^11.0.0
+
+  # Core packages
+  core_base:
+    path: ../core_base
+  core_ui:
+    path: ../core_ui
+  core_media:
+    path: ../core_media
+
+  # Services
+  service_content:
+    path: ../../services/service_content
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

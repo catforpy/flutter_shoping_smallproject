@@ -1,0 +1,26 @@
+# melos_managed_dependency_overrides: core_base,core_cache,core_constants,core_database,core_exceptions,core_logging,core_network,core_utils,service_comment,service_commerce,service_interaction,service_user
+dependency_overrides:
+  core_base:
+    path: ../../core/core_base
+  core_cache:
+    path: ../../core/core_cache
+  core_constants:
+    path: ../../core/core_constants
+  core_database:
+    path: ../../core/core_database
+  core_exceptions:
+    path: ../../core/core_exceptions
+  core_logging:
+    path: ../../core/core_logging
+  core_network:
+    path: ../../core/core_network
+  core_utils:
+    path: ../../core/core_utils
+  service_comment:
+    path: ../service_comment
+  service_commerce:
+    path: ../service_commerce
+  service_interaction:
+    path: ../service_interaction
+  service_user:
+    path: ../service_user

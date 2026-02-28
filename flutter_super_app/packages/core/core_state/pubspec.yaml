@@ -1,0 +1,34 @@
+name: core_state
+description: Core state management package for Flutter super app. Based on Riverpod.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Core dependencies
+  core_base:
+    path: ../core_base
+  core_utils:
+    path: ../core_utils
+  core_exceptions:
+    path: ../core_exceptions
+  core_logging:
+    path: ../core_logging
+  core_cache:
+    path: ../core_cache
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.8
+  riverpod_generator: ^2.4.0
+  riverpod_lint: ^2.3.10

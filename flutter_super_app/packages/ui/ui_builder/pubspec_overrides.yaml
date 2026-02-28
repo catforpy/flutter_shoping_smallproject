@@ -1,0 +1,22 @@
+# melos_managed_dependency_overrides: core_base,core_utils,ui_components,ui_templates,ui_extensions,core_audio,core_image,core_logging,core_media,core_ui
+dependency_overrides:
+  core_audio:
+    path: ../../core/core_audio
+  core_base:
+    path: ../../core/core_base
+  core_image:
+    path: ../../core/core_image
+  core_logging:
+    path: ../../core/core_logging
+  core_media:
+    path: ../../core/core_media
+  core_ui:
+    path: ../../core/core_ui
+  core_utils:
+    path: ../../core/core_utils
+  ui_components:
+    path: ../ui_components
+  ui_extensions:
+    path: ../ui_extensions
+  ui_templates:
+    path: ../ui_templates

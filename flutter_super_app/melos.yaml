@@ -1,0 +1,165 @@
+name: flutter_super_app
+repository: https://github.com/catforpy/flutter_super_app
+# README: 文档请查看 docs/guides/README.md
+
+# ========== Package 管理 ==========
+# 指定需要管理的 Package
+packages:
+  - packages/**           # 管理 packages 下所有包
+  - apps/**              # 管理 apps 下所有包
+
+# ========== 命令配置 ==========
+command:
+  bootstrap:
+    # 串行安装依赖（避免并发问题）
+    runPubGetInParallel: false
+
+  # 版本管理
+  version:
+    # 主分支名称
+    branch: main
+
+    # 版本号提交信息模板
+    message: "chore(release): 发布 package {package_name} 版本 {new_version}"
+
+  # 清理项目
+  clean:
+    # 清理前运行的 hooks
+    hooks:
+      post: |
+        melos exec -c 1 -- flutter clean
+        melos exec -c 1 -- dart clean
+
+# ========== 脚本配置 ==========
+scripts:
+  # ============================================
+  # 开发相关
+  # ============================================
+
+  # 启动主应用（开发模式）
+  start:
+    description: "启动主应用开发环境"
+    run: cd apps/app_main && flutter run
+
+  # 启动 Web 开发
+  start:web:
+    description: "启动 Web 开发环境"
+    run: cd apps/app_main && flutter run -d chrome
+
+  # ============================================
+  # 构建相关
+  # ============================================
+
+  # 构建所有应用
+  build:
+    description: "构建所有应用"
+    run: melos run build:apk
+
+  # 构建 APK
+  build:apk:
+    description: "构建 Android APK（Release 版本）"
+    run: cd apps/app_main && flutter build apk --release
+
+  # 构建 iOS
+  build:ios:
+    description: "构建 iOS 应用（Release 版本）"
+    run: cd apps/app_main && flutter build ios --release
+
+  # 构建 Web
+  build:web:
+    description: "构建 Web 应用"
+    run: cd apps/app_main && flutter build web
+
+  # ============================================
+  # 测试相关
+  # ============================================
+
+  # 运行所有测试
+  test:
+    description: "运行所有单元测试"
+    run: melos run test:unit --no-select
+
+  # 运行单元测试
+  test:unit:
+    description: "运行单元测试"
+    run: melos exec -- dart test
+
+  # 运行集成测试
+  test:integration:
+    description: "运行集成测试"
+    run: melos exec -- flutter test integration_test
+
+  # 测试覆盖率
+  test:coverage:
+    description: "生成测试覆盖率报告"
+    run: melos exec -- dart test --coverage
+
+  # ============================================
+  # 代码生成
+  # ============================================
+
+  # 运行所有代码生成
+  gen:
+    description: "运行所有代码生成"
+    run: |
+      melos run gen:build_runner &&
+      melos run gen:freezed &&
+      melos run gen:riverpod
+
+  # 运行 build_runner
+  gen:build_runner:
+    description: "运行 build_runner 生成代码"
+    run: melos exec -c 1 -- dart run build_runner build --delete-conflicting-outputs
+
+  # 监听文件变化自动生成
+  gen:watch:
+    description: "监听文件变化自动生成代码"
+    run: melos exec -c 1 -- dart run build_runner watch --delete-conflicting-outputs
+
+  # ============================================
+  # 代码质量
+  # ============================================
+
+  # 格式化所有代码
+  format:
+    description: "格式化所有 Dart 代码"
+    run: dart format . -l 120
+
+  # 分析代码
+  analyze:
+    description: "分析所有代码"
+    run: melos exec -c 1 -- dart analyze .fatal
+
+  # 修复代码问题
+  fix:
+    description: "自动修复代码问题"
+    run: melos exec -c 1 -- dart fix --apply
+
+  # ============================================
+  # 清理相关
+  # ============================================
+
+  # 清理所有生成文件
+  clean:
+    description: "清理所有生成文件"
+    run: |
+      melos run clean:flutter &&
+      melos run clean:dart &&
+      melos run clean:build
+
+  # 清理 Flutter 构建文件
+  clean:flutter:
+    run: melos exec -- flutter clean
+
+  # 清理 Dart 构建文件
+  clean:dart:
+    run: melos exec -- dart clean
+
+  # 清理 build 目录
+  clean:build:
+    run: find . -type d -name "build" -exec rm -rf {} + 2>/dev/null || true
+
+# ========== 环境配置 ==========
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.16.0'

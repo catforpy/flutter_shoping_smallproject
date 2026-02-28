@@ -1,0 +1,39 @@
+name: service_auth
+description: Authentication service for Flutter super app. Handles login, register, and token management.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+
+  # Core dependencies
+  core_base:
+    path: ../../core/core_base
+  core_utils:
+    path: ../../core/core_utils
+  core_network:
+    path: ../../core/core_network
+  core_cache:
+    path: ../../core/core_cache
+  core_state:
+    path: ../../core/core_state
+  core_logging:
+    path: ../../core/core_logging
+  core_exceptions:
+    path: ../../core/core_exceptions
+
+  # Service dependencies
+  service_user:
+    path: ../service_user
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  mocktail: ^1.0.2

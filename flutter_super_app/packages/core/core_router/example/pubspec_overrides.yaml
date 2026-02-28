@@ -1,0 +1,12 @@
+# melos_managed_dependency_overrides: core_base,core_exceptions,core_logging,core_router,core_utils
+dependency_overrides:
+  core_base:
+    path: ../../core_base
+  core_exceptions:
+    path: ../../core_exceptions
+  core_logging:
+    path: ../../core_logging
+  core_router:
+    path: ..
+  core_utils:
+    path: ../../core_utils

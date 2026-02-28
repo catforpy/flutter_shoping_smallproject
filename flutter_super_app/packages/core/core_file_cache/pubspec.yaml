@@ -1,0 +1,36 @@
+name: core_file_cache
+description: File cache manager for caching images, videos, and audio files.
+version: 0.0.1
+publish_to: none
+homepage: https://github.com/your-org/flutter-super-app
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 文件缓存核心库
+  flutter_cache_manager: ^3.3.1
+
+  # 路径获取
+  path_provider: ^2.1.2
+
+  # 网络请求
+  dio: ^5.4.0
+
+  # 加密（可选）
+  crypto: ^3.0.3
+
+  # 核心依赖
+  core_logging:
+    path: ../core_logging
+  core_utils:
+    path: ../core_utils
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

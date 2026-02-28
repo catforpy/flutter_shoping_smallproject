@@ -1,0 +1,33 @@
+name: service_commerce
+description: Highly extensible e-commerce service for the super app - supports products, cart, orders, gifts and custom commerce types.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Core packages
+  core_base:
+    path: ../../core/core_base
+  core_network:
+    path: ../../core/core_network
+  core_logging:
+    path: ../../core/core_logging
+
+  # Services
+  service_user:
+    path: ../service_user
+  service_interaction:
+    path: ../service_interaction
+  service_comment:
+    path: ../service_comment
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

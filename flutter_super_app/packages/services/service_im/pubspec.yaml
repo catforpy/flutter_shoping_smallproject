@@ -1,0 +1,34 @@
+name: service_im
+description: Highly extensible instant messaging service for the super app - supports single chat, group chat, and various message types.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+  flutter: ^3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Core packages
+  core_base:
+    path: ../../core/core_base
+  core_network:
+    path: ../../core/core_network
+  core_cache:
+    path: ../../core/core_cache
+  core_logging:
+    path: ../../core/core_logging
+
+  # Services
+  service_user:
+    path: ../service_user
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
