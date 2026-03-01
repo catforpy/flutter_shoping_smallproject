@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:service_commerce/service_commerce.dart';
 import 'package:ui_components/ui_components.dart';
 import 'package:ui_templates/ui_templates.dart';
-import 'features/home/widgets/home_search_bar.dart';
-import 'features/home/theme/home_theme.dart';
+import '../features/home/widgets/home_search_bar.dart';
+import '../features/home/theme/home_theme.dart';
+import '../features/home/data/mocks/mock_data.dart';
 
 /// 新人补贴页面
 ///
@@ -190,17 +191,42 @@ class _NewcomerSubsidyTabPage extends StatelessWidget {
   List<Widget> _buildProductCards(List<Product> products) {
     return products.map((product) {
       return MasonryProductCard(
-        data: product.toMasonryCardData(
-          cornerBadge: '百亿补贴',
-          cornerBadgeColor: Colors.red,
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('查看商品: ${product.name}')),
-            );
-          },
-        ),
+        data: _buildMasonryCardData(product),
       );
     }).toList();
+  }
+
+  /// 构建 MasonryProductCardData
+  MasonryProductCardData _buildMasonryCardData(Product product) {
+    return MasonryProductCardData(
+      title: product.name,
+      subtitle: _getSubtitle(product),
+      image: NetworkImage(product.coverImage ?? ''),
+      price: product.priceInYuan,
+      originalPrice: product.originalPriceInYuan,
+      cornerBadge: '百亿补贴',
+      cornerBadgeColor: Colors.red,
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('查看商品: ${product.name}')),
+        );
+      },
+    );
+  }
+
+  /// 从规格信息中提取副标题
+  String? _getSubtitle(Product product) {
+    if (product.specifications == null || product.specifications!.isEmpty) {
+      return null;
+    }
+
+    // 取第一个规格的第一个值作为副标题
+    final firstSpec = product.specifications!.entries.first;
+    if (firstSpec.value.isNotEmpty) {
+      return firstSpec.value.first;
+    }
+
+    return null;
   }
 
   /// 根据标签索引获取商品数据

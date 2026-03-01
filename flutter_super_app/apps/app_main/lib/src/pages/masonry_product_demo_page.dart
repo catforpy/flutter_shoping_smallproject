@@ -50,7 +50,12 @@ class MasonryProductDemoPage extends StatelessWidget {
       case 0:
         // 样式1：基础卡片 + 角标
         return MasonryProductCard(
-          data: product.toMasonryCardData(
+          data: MasonryProductCardData(
+            title: product.name,
+            subtitle: _getSubtitle(product),
+            image: NetworkImage(product.coverImage ?? ''),
+            price: product.priceInYuan,
+            originalPrice: product.originalPriceInYuan,
             cornerBadge: '自营',
           ),
         );
@@ -58,7 +63,12 @@ class MasonryProductDemoPage extends StatelessWidget {
       case 1:
         // 样式2：基础卡片 + 角标 + 标签
         return MasonryProductCard(
-          data: product.toMasonryCardData(
+          data: MasonryProductCardData(
+            title: product.name,
+            subtitle: _getSubtitle(product),
+            image: NetworkImage(product.coverImage ?? ''),
+            price: product.priceInYuan,
+            originalPrice: product.originalPriceInYuan,
             cornerBadge: '京东自营',
             cornerBadgeColor: Colors.red,
             tags: [
@@ -75,7 +85,12 @@ class MasonryProductDemoPage extends StatelessWidget {
       case 2:
         // 样式3：基础卡片 + 角标 + 服务
         return MasonryProductCard(
-          data: product.toMasonryCardData(
+          data: MasonryProductCardData(
+            title: product.name,
+            subtitle: _getSubtitle(product),
+            image: NetworkImage(product.coverImage ?? ''),
+            price: product.priceInYuan,
+            originalPrice: product.originalPriceInYuan,
             cornerBadge: '包邮',
             cornerBadgeColor: Colors.orange,
             services: [
@@ -96,7 +111,12 @@ class MasonryProductDemoPage extends StatelessWidget {
       case 3:
         // 样式4：完整卡片（角标 + 标签 + 服务）
         return MasonryProductCard(
-          data: product.toMasonryCardData(
+          data: MasonryProductCardData(
+            title: product.name,
+            subtitle: _getSubtitle(product),
+            image: NetworkImage(product.coverImage ?? ''),
+            price: product.priceInYuan,
+            originalPrice: product.originalPriceInYuan,
             cornerBadge: '百亿补贴',
             cornerBadgeColor: Colors.red,
             tags: [
@@ -131,12 +151,32 @@ class MasonryProductDemoPage extends StatelessWidget {
       default:
         // 样式5：带浮标
         return MasonryProductCard(
-          data: product.toMasonryCardData(
+          data: MasonryProductCardData(
+            title: product.name,
+            subtitle: _getSubtitle(product),
+            image: NetworkImage(product.coverImage ?? ''),
+            price: product.priceInYuan,
+            originalPrice: product.originalPriceInYuan,
             cornerBadge: '自营',
             floatingBadge: _buildFloatingBadge(),
           ),
         );
     }
+  }
+
+  /// 从规格信息中提取副标题
+  String? _getSubtitle(Product product) {
+    if (product.specifications == null || product.specifications!.isEmpty) {
+      return null;
+    }
+
+    // 取第一个规格的第一个值作为副标题
+    final firstSpec = product.specifications!.entries.first;
+    if (firstSpec.value.isNotEmpty) {
+      return firstSpec.value.first;
+    }
+
+    return null;
   }
 
   /// 构建浮标组件

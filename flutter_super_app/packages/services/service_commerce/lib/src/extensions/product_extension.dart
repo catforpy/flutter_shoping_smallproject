@@ -1,12 +1,10 @@
 library;
 
-import 'package:flutter/material.dart';
-import 'package:ui_components/ui_components.dart';
 import '../models/product.dart';
 
 /// Product 扩展方法
 ///
-/// 提供价格转换、数据格式化、卡片数据生成等常用功能
+/// 提供价格转换、数据格式化等常用功能
 extension ProductExtension on Product {
   /// 价格转换：分 -> 元
   ///
@@ -78,112 +76,6 @@ extension ProductExtension on Product {
 
   /// 检查是否有原价
   bool get hasOriginalPrice => originalPrice != null && originalPrice! > 0;
-
-  /// 转换为错落商品卡片数据（用于瀑布流）
-  ///
-  /// 将 Product 模型转换为 MasonryProductCardData，
-  /// 自动填充基础信息，可选区域可根据需要自定义。
-  ///
-  /// 示例：
-  /// ```dart
-  /// final cardData = product.toMasonryCardData(
-  ///   cornerBadge: '自营',
-  ///   tags: ['7天无理由退货'],
-  /// );
-  /// ```
-  MasonryProductCardData toMasonryCardData({
-    /// 顶部横幅
-    Widget? topBanner,
-
-    /// 左下角角标（默认根据 sellerName 判断）
-    String? cornerBadge,
-
-    /// 角标颜色
-    Color? cornerBadgeColor,
-
-    /// 标签列表
-    List<MasonryProductCardTag>? tags,
-
-    /// 服务承诺列表
-    List<MasonryProductCardTag>? services,
-
-    /// 行动按钮
-    Widget? actionButton,
-
-    /// 右下角浮标
-    Widget? floatingBadge,
-
-    /// 点击回调
-    VoidCallback? onTap,
-
-    /// 行动按钮点击回调
-    VoidCallback? onActionTap,
-
-    /// 自定义标题样式
-    TextStyle? titleStyle,
-
-    /// 自定义副标题样式
-    TextStyle? subtitleStyle,
-
-    /// 自定义价格样式
-    TextStyle? priceStyle,
-
-    /// 卡片圆角
-    double? borderRadius,
-
-    /// 卡片内边距
-    EdgeInsetsGeometry? padding,
-
-    /// 背景色
-    Color? backgroundColor,
-
-    /// 是否显示阴影
-    bool showShadow = true,
-  }) {
-    return MasonryProductCardData(
-      // 基础信息
-      title: name,
-      subtitle: _getSubtitleFromSpecs(),
-      image: coverImage != null
-          ? NetworkImage(coverImage!)
-          : const AssetImage('assets/images/placeholder.png'),
-      price: priceInYuan,
-      originalPrice: originalPriceInYuan,
-
-      // 可选模块
-      topBanner: topBanner,
-      cornerBadge: cornerBadge ?? (sellerName?.contains('自营') == true ? '自营' : null),
-      cornerBadgeColor: cornerBadgeColor,
-      tags: tags,
-      services: services,
-      actionButton: actionButton,
-      floatingBadge: floatingBadge,
-      onTap: onTap,
-      onActionTap: onActionTap,
-
-      // 样式控制
-      titleStyle: titleStyle,
-      subtitleStyle: subtitleStyle,
-      priceStyle: priceStyle,
-      borderRadius: borderRadius,
-      padding: padding,
-      backgroundColor: backgroundColor,
-      showShadow: showShadow,
-    );
-  }
-
-  /// 从规格信息中提取副标题（如颜色、尺寸）
-  String? _getSubtitleFromSpecs() {
-    if (specifications == null || specifications!.isEmpty) return null;
-
-    // 取第一个规格的第一个值作为副标题
-    final firstSpec = specifications!.entries.first;
-    if (firstSpec.value.isNotEmpty) {
-      return firstSpec.value.first;
-    }
-
-    return null;
-  }
 }
 
 /// Dart 的 let 方法（类似 Kotlin 的 let）
