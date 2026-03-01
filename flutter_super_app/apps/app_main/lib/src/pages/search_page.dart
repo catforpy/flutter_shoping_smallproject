@@ -88,42 +88,56 @@ class _SearchPageState extends State<SearchPage> {
 
   /// 构建搜索框
   Widget _buildSearchField() {
-    return SearchField(
-      controller: _searchController,
-      hintText: '请输入搜索内容',
-      styleConfig: SearchFieldStyleConfig(
-        // backgroundColor: Color(0xFFF5F5F5),
-        backgroundColor: Colors.white,
-        textColor: Colors.black87,
-        hintColor: Colors.grey[600]!,
-        cursorColor: Colors.blue,
-        borderRadius: 20,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white,
+          width: 1,
+        ),
       ),
-      animationConfig: SearchFieldAnimationConfig(
-        duration: Duration(milliseconds: 150),
-        curve: Curves.easeOut,
+      child: SearchField(
+        controller: _searchController,
+        hintText: '请输入搜索内容',
+        styleConfig: SearchFieldStyleConfig(
+          backgroundColor: Colors.transparent,
+          textColor: Colors.black87,
+          hintColor: Colors.grey[600]!,
+          cursorColor: Colors.blue,
+          borderRadius: 20,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+        animationConfig: const SearchFieldAnimationConfig(
+          duration: Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+        ),
+        actionConfig: SearchFieldActionConfig(
+          onTap: () {
+            // 点击搜索框时，聚焦并弹出键盘
+            // SearchField 内部会自动处理焦点
+          },
+          onChanged: (text) {
+            setState(() {
+              _showClearButton = text.isNotEmpty;
+            });
+          },
+          onClear: () {
+            _searchController.clear();
+            setState(() {
+              _showClearButton = false;
+            });
+          },
+        ),
+        prefix: const Icon(
+          Icons.search,
+          color: Colors.grey,
+          size: 20,
+        ),
+        suffix: _showClearButton
+            ? const Icon(Icons.close, color: Colors.grey, size: 20)
+            : null,
       ),
-      actionConfig: SearchFieldActionConfig(
-        onTap: () {
-          // 点击搜索框时，聚焦并弹出键盘
-          // SearchField 内部会自动处理焦点
-        },
-        onChanged: (text) {
-          setState(() {
-            _showClearButton = text.isNotEmpty;
-          });
-        },
-        onClear: () {
-          _searchController.clear();
-          setState(() {
-            _showClearButton = false;
-          });
-        },
-      ),
-      suffix: _showClearButton
-          ? Icon(Icons.close, color: Colors.grey[600], size: 20)
-          : null,
     );
   }
 

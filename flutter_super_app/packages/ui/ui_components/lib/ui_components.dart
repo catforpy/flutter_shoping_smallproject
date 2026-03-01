@@ -31,6 +31,9 @@ export 'src/search/search_hint_rotator.dart';
 // Card 组件
 export 'src/cards/info_card.dart';
 
+// Grid 组件
+export 'src/grid/expandable_grid_pageview.dart';
+
 // 商品组件
 export 'src/product/product_components.dart';
 

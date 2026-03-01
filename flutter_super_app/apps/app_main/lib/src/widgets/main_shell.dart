@@ -3,19 +3,12 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ui_components/ui_components.dart';
-import 'package:flutter_pickers/pickers.dart';
 import 'package:go_router/go_router.dart';
-import '../data.dart';
 
 // ==================== Riverpod Providers ====================
 
 /// 底部导航状态 Provider
 final bottomNavProvider = StateProvider<int>((ref) => 0);
-
-/// 城市选择状态 Provider
-final selectedCityProvider = StateProvider<Map<String, String>>((ref) {
-  return {'province': '北京', 'city': '东城区'};
-});
 
 /// 发现页面标签状态 Provider
 final discoveryTabProvider = StateProvider<int>((ref) => 0);
@@ -49,11 +42,10 @@ class _MainShellState extends ConsumerState<MainShell> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(bottomNavProvider);
-    final selectedCity = ref.watch(selectedCityProvider);
 
     return Scaffold(
       // 顶部导航栏
-      appBar: _buildAppBar(context, ref, currentIndex, selectedCity),
+      appBar: _buildAppBar(context, ref, currentIndex),
       // 内容区域
       body: widget.child,
       // 底部导航栏
@@ -92,15 +84,14 @@ class _MainShellState extends ConsumerState<MainShell> {
   }
 
   /// 构建顶部导航栏
-  PreferredSizeWidget _buildAppBar(
+  PreferredSizeWidget? _buildAppBar(
     BuildContext context,
     WidgetRef ref,
     int currentIndex,
-    Map<String, String> selectedCity,
   ) {
-    // 首页和分类页显示搜索框
+    // 首页不显示 AppBar（使用自己的 CourseDetailTabBar）
     if (currentIndex == 0) {
-      return _buildSearchAppBar(context, ref, selectedCity);
+      return null;
     } else if (currentIndex == 1) {
       return _buildCategorySearchAppBar(context, ref);
     } else if (currentIndex == 2) {
@@ -112,93 +103,6 @@ class _MainShellState extends ConsumerState<MainShell> {
     }
     // 其他页面显示标题
     return _buildTitleAppBar(context, _getPageTitle(currentIndex));
-  }
-
-  /// 构建搜索框导航栏（首页使用）
-  PreferredSizeWidget _buildSearchAppBar(
-    BuildContext context,
-    WidgetRef ref,
-    Map<String, String> selectedCity,
-  ) {
-    final searchController = TextEditingController();
-
-    return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
-      elevation: 0,
-      title: SearchField(
-        controller: searchController,
-        hintText: '',
-        readOnly: true,
-        styleConfig: SearchFieldStyleConfig(
-          backgroundColor: const Color(0xFFF5F5F5),
-          textColor: Colors.black87,
-          hintColor: Colors.grey[600]!,
-          cursorColor: Colors.blue,
-          borderRadius: 20,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        ),
-        animationConfig: SearchFieldAnimationConfig(
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeOut,
-        ),
-        actionConfig: SearchFieldActionConfig(
-          onTap: () {
-            // 使用 go_router 导航
-            context.push('/search');
-          },
-        ),
-        prefix: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.search, color: Colors.grey[600], size: 20),
-            const SizedBox(width: 8),
-            SearchHintRotator(
-              hintGroups: MockData.searchHintGroups
-                  .map((group) => SearchHintGroup(
-                        hints: List<String>.from(group['hints'] as List),
-                      ))
-                  .toList(),
-              config: SearchHintRotatorConfig(
-                hintColor: Colors.grey[600]!,
-                interval: const Duration(seconds: 2),
-                animationDuration: const Duration(milliseconds: 500),
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-      centerTitle: false,
-      titleSpacing: 8,
-      actions: [
-        // 位置选择
-        GestureDetector(
-          onTap: () => _showCitySelector(context, ref),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.location_on, color: Colors.grey[700], size: 20),
-              const SizedBox(width: 4),
-              Text(
-                '${selectedCity['province']}-${selectedCity['city']}',
-                style: TextStyle(color: Colors.grey[700], fontSize: 14),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 16),
-        // 邮件图标
-        GestureDetector(
-          onTap: () {
-            // 使用 go_router 导航
-            context.push('/message');
-          },
-          child: Icon(Icons.mail_outline, color: Colors.grey[700], size: 20),
-        ),
-        const SizedBox(width: 8),
-      ],
-    );
   }
 
   /// 构建分类页面搜索框导航栏（搜索框 + 购物车图标）
@@ -435,23 +339,6 @@ class _MainShellState extends ConsumerState<MainShell> {
       title: Text(title),
       centerTitle: true,
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-    );
-  }
-
-  /// 显示城市选择器
-  void _showCitySelector(BuildContext context, WidgetRef ref) {
-    final selectedCity = ref.read(selectedCityProvider);
-    Pickers.showAddressPicker(
-      context,
-      initProvince: selectedCity['province'] ?? '北京',
-      initCity: selectedCity['city'] ?? '东城区',
-      initTown: '',
-      onConfirm: (p, c, t) {
-        ref.read(selectedCityProvider.notifier).state = {
-          'province': p,
-          'city': c,
-        };
-      },
     );
   }
 

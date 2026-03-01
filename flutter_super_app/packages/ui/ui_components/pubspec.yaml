@@ -32,6 +32,7 @@ dependencies:
     path: ../../core/core_utils
   core_ui:
     path: ../../core/core_ui
+  expandable_page_view: ^1.2.1
 
 dev_dependencies:
   flutter_test:

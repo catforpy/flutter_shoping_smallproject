@@ -1,203 +1,475 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ui_components/ui_components.dart';
-import 'data/data.dart';
-import 'tabs/tabs.dart';
-import 'providers/home_page_provider.dart';
+import '../../pages/search_page.dart';
 
 /// 首页
 ///
-/// ## 功能模块化架构
-/// - 标签切换由 HomePage 管理
-/// - 每个标签页的内容由独立的 Tab 组件管理
-/// - 数据层使用 Repository 模式
-/// - 状态管理使用 Riverpod
-class HomePage extends ConsumerStatefulWidget {
+/// 使用 CourseDetailTabBar 组件作为顶部导航栏
+/// 标签：特价、首页
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _HomePageState extends State<HomePage> {
   /// PageView 控制器
   late PageController _pageController;
+
+  /// 标签列表
+  final List<UnderlineTabItem> _tabs = const [
+    UnderlineTabItem(id: '0', title: '特价'),
+    UnderlineTabItem(id: '1', title: '首页'),
+  ];
 
   @override
   void initState() {
     super.initState();
-    // 初始化 PageController（使用 Provider 的初始值）
-    final initialIndex = ref.read(homeCurrentIndexProvider);
-    _pageController = PageController(initialPage: initialIndex);
-    // 添加滚动监听器
-    _pageController.addListener(_onPageViewScroll);
+    _pageController = PageController(initialPage: 1); // 默认显示"首页"
   }
 
   @override
   void dispose() {
-    _pageController.removeListener(_onPageViewScroll);
     _pageController.dispose();
     super.dispose();
   }
 
-  /// 监听 PageView 滚动，实时更新标签动画状态
-  void _onPageViewScroll() {
-    // FutureProvider 可能还没加载完成，所以需要检查
-    final tabsAsyncValue = ref.read(homeTabsProvider);
-    if (tabsAsyncValue is! AsyncData) return;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          // 顶部标签栏（使用 SafeArea 确保不被刘海屏/状态栏遮挡）
+          SafeArea(
+            bottom: false,
+            child: CourseDetailTabBar(
+              tabs: _tabs,
+              pageController: _pageController,
+              onTap: (index) {
+                _pageController.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+              height: 50,
+              topBorderRadius: 0,
+              centerTabs: true,
+            ),
+          ),
 
-    final tabs = (tabsAsyncValue as AsyncData).value;
-    if (!_pageController.hasClients || tabs.isEmpty) return;
-
-    final page = _pageController.page;
-    if (page == null) return;
-
-    final index = page.floor();
-    final position = page - index;
-
-    // 更新 Provider 状态
-    ref.read(homeCurrentIndexProvider.notifier).state = index;
-    ref.read(homeScrollPositionProvider.notifier).state = position;
+          // 内容区域（支持手势滑动）
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                // PageView 滑动时，CourseDetailTabBar 会自动监听并更新
+                // 这里不需要额外操作，CourseDetailTabBar 已经通过 listener 监听了
+              },
+              children: const [
+                // 特价页面
+                _SpecialPricePage(),
+                // 首页内容
+                _HomePageContent(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+/// 特价页面
+class _SpecialPricePage extends StatelessWidget {
+  const _SpecialPricePage();
 
   @override
   Widget build(BuildContext context) {
-    // 监听首页标签数据（自动处理加载状态和错误状态）
-    final tabsAsyncValue = ref.watch(homeTabsProvider);
+    return Container(
+      color: Colors.grey.withValues(alpha: 0.05),
+      child: Column(
+        children: [
+          // 搜索框区域
+          const _HomeSearchBar(),
 
-    // 监听当前选中的标签索引和滚动位置
-    final currentIndex = ref.watch(homeCurrentIndexProvider);
-    final scrollPosition = ref.watch(homeScrollPositionProvider);
+          // 内容区域
+          const Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.local_offer,
+                    size: 80,
+                    color: Colors.red,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    '特价页面',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '← 向右滑动切换到首页 →',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-    return tabsAsyncValue.when(
-      loading: () => _buildLoadingView(),
-      error: (error, stackTrace) => _buildErrorView(error.toString()),
-      data: (tabs) {
-        return _buildHomePage(tabs, currentIndex, scrollPosition);
+/// 首页内容
+class _HomePageContent extends StatefulWidget {
+  const _HomePageContent();
+
+  @override
+  State<_HomePageContent> createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<_HomePageContent> {
+  /// 横向标签索引
+  int _horizontalTabIndex = 0;
+
+  /// 首页横向滑动标签列表
+  final List<TabItem> _horizontalTabs = const [
+    TabItem(id: '0', title: '推荐'),
+    TabItem(id: '1', title: '新人补贴'),
+    TabItem(id: '2', title: '大家电'),
+    TabItem(id: '3', title: '手机'),
+    TabItem(id: '4', title: '电脑办公'),
+    TabItem(id: '5', title: '酒水'),
+    TabItem(id: '6', title: '小家电'),
+    TabItem(id: '7', title: '食品饮料'),
+    TabItem(id: '8', title: '美妆'),
+    TabItem(id: '9', title: '数码'),
+    TabItem(id: '10', title: '运动'),
+    TabItem(id: '11', title: '全球购'),
+    TabItem(id: '12', title: '男装'),
+    TabItem(id: '13', title: '箱包皮具'),
+    TabItem(id: '14', title: '家居厨具'),
+    TabItem(id: '15', title: '爱车'),
+    TabItem(id: '16', title: '珠宝首饰'),
+    TabItem(id: '17', title: '玩具乐器'),
+    TabItem(id: '18', title: '房产'),
+    TabItem(id: '19', title: '图书'),
+    TabItem(id: '20', title: '内衣'),
+    TabItem(id: '21', title: '童装'),
+    TabItem(id: '22', title: '装修定制'),
+    TabItem(id: '23', title: '工业品'),
+    TabItem(id: '24', title: '个人护理'),
+    TabItem(id: '25', title: '文具'),
+    TabItem(id: '26', title: '奢侈品'),
+    TabItem(id: '27', title: '拍拍二手'),
+    TabItem(id: '28', title: '女装'),
+    TabItem(id: '29', title: '家庭清洁'),
+    TabItem(id: '30', title: '粮油调味'),
+    TabItem(id: '31', title: '生活旅行'),
+    TabItem(id: '32', title: '家纺'),
+    TabItem(id: '33', title: '宠物'),
+    TabItem(id: '34', title: '女鞋'),
+    TabItem(id: '35', title: '生鲜'),
+    TabItem(id: '36', title: '男鞋'),
+    TabItem(id: '37', title: '自有品牌'),
+    TabItem(id: '38', title: '医药健康'),
+    TabItem(id: '39', title: '钟表眼镜'),
+    TabItem(id: '40', title: '鲜花绿植'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey.withValues(alpha: 0.05),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 搜索框区域
+          const _HomeSearchBar(),
+
+          // 横向滑动标签栏
+          _buildHorizontalTabs(),
+
+          // 可展开网格轮播组件（会推开下面的内容）
+          _buildExpandableGrid(),
+
+          // 内容区域（测试用）
+          Container(
+            padding: const EdgeInsets.all(32),
+            child: Center(
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.home,
+                    size: 80,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '首页内容',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[700],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '← 向左滑动切换到特价 →',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '当前选中: ${_horizontalTabs[_horizontalTabIndex].title}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建横向滑动标签栏
+  Widget _buildHorizontalTabs() {
+    return Container(
+      color: Colors.white,
+      child: HorizontalTabs(
+        tabs: _horizontalTabs,
+        currentIndex: _horizontalTabIndex,
+        onTap: (index) {
+          setState(() {
+            _horizontalTabIndex = index;
+          });
+        },
+        height: 40,
+        spacing: 12,
+        tabPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        borderRadius: 20,
+        backgroundColor: Colors.white,
+        // "推荐"标签吸顶在左侧
+        pinnedTabIndex: 0,
+        // 吸顶标签样式
+        pinnedBorder: Border.all(
+          color: Colors.grey.withValues(alpha: 0.3),
+          width: 1,
+        ),
+        pinnedSelectedColor: Colors.red, // "推荐"选中时红色
+        pinnedUnselectedColor: Colors.red, // "推荐"未选中时也是红色
+        pinnedSelectedBackgroundColor: Colors.white,
+        pinnedUnselectedBackgroundColor: Colors.white,
+        // 普通标签样式
+        selectedColor: Colors.black,
+        unselectedColor: Colors.grey[600],
+        selectedBackgroundColor: Colors.grey.withValues(alpha: 0.1),
+        unselectedBackgroundColor: Colors.transparent,
+      ),
+    );
+  }
+
+  /// 构建可展开网格轮播组件
+  Widget _buildExpandableGrid() {
+    // 定义分类数据（名称 + 图标）
+    final categoryData = [
+      ('品质外卖', Icons.restaurant),
+      ('新人福利', Icons.card_giftcard),
+      ('签到', Icons.event_available),
+      ('东东农场', Icons.agriculture),
+      ('领红包', Icons.card_giftcard),
+      ('万人团', Icons.groups),
+      ('京东超市', Icons.shopping_cart),
+      ('手机数码', Icons.phone_android),
+      ('家电家居', Icons.tv),
+      ('优惠充值', Icons.phone_in_talk),
+      ('京东国际', Icons.public),
+      ('看房买药', Icons.medical_services),
+      ('拍拍二手', Icons.cached),
+      ('京东拍卖', Icons.gavel),
+      ('沃尔玛', Icons.store),
+      ('京东生鲜', Icons.eco),
+      ('京东到家', Icons.delivery_dining),
+      ('大牌试用', Icons.stars),
+      ('领券', Icons.local_offer),
+      ('零食广场', Icons.fastfood),
+    ];
+
+    // 生成widget列表
+    final categoryWidgets = categoryData.map((data) {
+      return _buildCategoryItem(data.$1, data.$2);
+    }).toList();
+
+    return ExpandableGridPageView(
+      children: categoryWidgets,
+      crossAxisCount: 5,
+      firstPageRows: 1,
+      secondPageRows: 3,
+      topPadding: 16,
+      bottomPadding: 8,
+      spacing: 8,
+      runSpacing: 16,
+      onTap: (index) {
+        final categoryName = categoryData[index].$1;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('点击了：$categoryName')),
+        );
+      },
+      onMoreTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('查看全部频道')),
+        );
       },
     );
   }
 
-  /// 构建加载中视图
-  Widget _buildLoadingView() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('加载中...', style: TextStyle(color: Colors.grey)),
-        ],
-      ),
-    );
-  }
-
-  /// 构建错误视图
-  Widget _buildErrorView(String errorMessage) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, size: 48, color: Colors.red),
-          const SizedBox(height: 16),
-          Text(
-            errorMessage,
-            style: const TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              // 刷新数据
-              ref.invalidate(homeTabsProvider);
-            },
-            child: const Text('重试'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 构建首页整体布局（顶部标签 + 内容区域）
-  Widget _buildHomePage(List<HomeTabModel> tabs, int currentIndex, double scrollPosition) {
+  /// 构建分类item
+  Widget _buildCategoryItem(String title, IconData icon) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildHorizontalTabs(tabs, currentIndex, scrollPosition), // 构建横向滑动标签栏（推荐、关注、热门...）
-        _buildContentArea(tabs), // 构建内容区域（占满剩余空间）
+        Icon(
+          icon,
+          size: 28,
+          color: Colors.grey[700],
+        ),
+        const SizedBox(height: 6),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[700],
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }
+}
 
-  /// 构建横向滑动标签栏（弹性下划线动画）
-  Widget _buildHorizontalTabs(List<HomeTabModel> tabs, int currentIndex, double scrollPosition) {
-    // 将 HomeTabModel 转换为 UnderlineTabItem
-    final tabItems = tabs
-        .map((model) => UnderlineTabItem(id: model.id, title: model.title))
-        .toList();
+/// 首页搜索框组件
+class _HomeSearchBar extends StatelessWidget {
+  const _HomeSearchBar();
 
-    return UnderlineTabsWithSlider(
-      tabs: tabItems,
-      currentIndex: currentIndex,
-      scrollPosition: scrollPosition,
-      onTap: _onTabTap,
-      indicatorConfig: UnderlineIndicatorConfig(
-        color: Colors.red, // 红色下划线
-        width: 40, // 固定宽度
-        height: 3, // 下划线高度
-        useElasticAnimation: true, // 启用弹性动画
-      ),
-      styleConfig: UnderlineTabStyleConfig(
-        selectedColor: Colors.red, // 选中文字红色
-        unselectedColor: Colors.black, // 未选中文字黑色
-        selectedFontSize: 17,
-        unselectedFontSize: 15,
-        selectedFontWeight: FontWeight.bold,
-        unselectedFontWeight: FontWeight.normal,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        spacing: 12,
-      ),
-      backgroundColor: Colors.white, // 白色背景
-    );
+  /// 跳转到搜索页面
+  void _navigateToSearch(BuildContext context) {
+    Navigator.push(context, SearchPage.route());
   }
 
-  /// 构建内容区域（占满剩余空间，使用 PageView 支持滑动切换）
-  Widget _buildContentArea(List<HomeTabModel> tabs) {
-    return Expanded(
-      child: PageView(
-        controller: _pageController,
-        children: tabs.map((tab) => _buildTabPageContent(tab)).toList(),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          // 搜索框
+          Expanded(
+            child: GestureDetector(
+              onTap: () => _navigateToSearch(context),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.grey.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: SearchField(
+                  hintText: '',
+                  readOnly: true,
+                  styleConfig: SearchFieldStyleConfig(
+                    backgroundColor: Colors.transparent,
+                    textColor: Colors.black87,
+                    hintColor: Colors.grey,
+                    cursorColor: Colors.blue,
+                    borderRadius: 20,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  ),
+                  animationConfig: const SearchFieldAnimationConfig(
+                    duration: Duration(milliseconds: 150),
+                    curve: Curves.easeOut,
+                  ),
+                  actionConfig: SearchFieldActionConfig(
+                    onTap: () => _navigateToSearch(context),
+                  ),
+                  prefix: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.search, color: Colors.grey, size: 20),
+                      const SizedBox(width: 8),
+                      // 向上轮播动画的提示词
+                      SearchHintRotator(
+                        hintGroups: const [
+                          SearchHintGroup(hints: ['零食']),
+                          SearchHintGroup(hints: ['巧克力']),
+                          SearchHintGroup(hints: ['茅台酒']),
+                          SearchHintGroup(hints: ['休闲零食']),
+                        ],
+                        config: SearchHintRotatorConfig(
+                          hintColor: Colors.grey,
+                          interval: const Duration(seconds: 1), // 每秒轮播
+                          animationDuration: const Duration(milliseconds: 500),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  suffix: const Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 搜索按钮
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () => _navigateToSearch(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                '搜索',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
-  }
-
-  /// 构建单个标签页的内容
-  Widget _buildTabPageContent(HomeTabModel tab) {
-    // 根据标签 ID 返回对应的标签页组件
-    switch (tab.id) {
-      case '0':
-        return const RecommendTab(); // 推荐标签页（有轮播图）
-      case '1':
-        return const FollowTab(); // 关注标签页（列表）
-      case '2':
-        return const HotTab(); // 热门标签页（网格）
-      default:
-        // 如果有更多标签，默认显示推荐页
-        return const RecommendTab();
-    }
-  }
-
-  /// 标签点击事件处理
-  void _onTabTap(int index) {
-    // 点击标签时，同步滚动 PageView
-    // 动画时长设置为 400ms，与下划线的弹性动画同步
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
-    // 不在这里更新 _currentIndex，让 PageView 的 onPageChanged 来更新
-    // 这样标签切换就会和内容滑动、下划线动画同步
   }
 }
