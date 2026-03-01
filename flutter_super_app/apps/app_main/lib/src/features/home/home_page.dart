@@ -1,8 +1,11 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:service_commerce/service_commerce.dart';
 import 'package:ui_components/ui_components.dart';
 import '../../pages/search_page.dart';
+import '../providers/home_product_provider.dart';
 
 /// 首页
 ///
@@ -136,19 +139,13 @@ class _SpecialPricePage extends StatelessWidget {
 }
 
 /// 首页内容
-class _HomePageContent extends StatefulWidget {
+class _HomePageContent extends ConsumerWidget {
   const _HomePageContent();
 
   @override
-  State<_HomePageContent> createState() => _HomePageContentState();
-}
-
-class _HomePageContentState extends State<_HomePageContent> {
-  /// 横向标签索引
-  int _horizontalTabIndex = 0;
-
-  /// 首页横向滑动标签列表
-  final List<TabItem> _horizontalTabs = const [
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 首页横向滑动标签列表
+    final List<TabItem> horizontalTabs = const [
     TabItem(id: '0', title: '推荐'),
     TabItem(id: '1', title: '新人补贴'),
     TabItem(id: '2', title: '大家电'),
@@ -193,7 +190,9 @@ class _HomePageContentState extends State<_HomePageContent> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final horizontalTabIndex = ref.watch(homeHorizontalTabProvider);
+
     return Container(
       color: Colors.grey.withValues(alpha: 0.05),
       child: Column(
@@ -203,67 +202,72 @@ class _HomePageContentState extends State<_HomePageContent> {
           const _HomeSearchBar(),
 
           // 横向滑动标签栏
-          _buildHorizontalTabs(),
+          _buildHorizontalTabs(horizontalTabIndex, ref),
 
           // 可展开网格轮播组件（会推开下面的内容）
           _buildExpandableGrid(),
 
-          // 内容区域（测试用）
-          Container(
-            padding: const EdgeInsets.all(32),
-            child: Center(
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.home,
-                    size: 80,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '首页内容',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[700],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '← 向左滑动切换到特价 →',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '当前选中: ${_horizontalTabs[_horizontalTabIndex].title}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // 商品列表区域
+          _buildProductList(),
         ],
       ),
     );
   }
 
   /// 构建横向滑动标签栏
-  Widget _buildHorizontalTabs() {
+  Widget _buildHorizontalTabs(int currentIndex, WidgetRef ref) {
+    // 首页横向滑动标签列表
+    final List<TabItem> horizontalTabs = const [
+    TabItem(id: '0', title: '推荐'),
+    TabItem(id: '1', title: '新人补贴'),
+    TabItem(id: '2', title: '大家电'),
+    TabItem(id: '3', title: '手机'),
+    TabItem(id: '4', title: '电脑办公'),
+    TabItem(id: '5', title: '酒水'),
+    TabItem(id: '6', title: '小家电'),
+    TabItem(id: '7', title: '食品饮料'),
+    TabItem(id: '8', title: '美妆'),
+    TabItem(id: '9', title: '数码'),
+    TabItem(id: '10', title: '运动'),
+    TabItem(id: '11', title: '全球购'),
+    TabItem(id: '12', title: '男装'),
+    TabItem(id: '13', title: '箱包皮具'),
+    TabItem(id: '14', title: '家居厨具'),
+    TabItem(id: '15', title: '爱车'),
+    TabItem(id: '16', title: '珠宝首饰'),
+    TabItem(id: '17', title: '玩具乐器'),
+    TabItem(id: '18', title: '房产'),
+    TabItem(id: '19', title: '图书'),
+    TabItem(id: '20', title: '内衣'),
+    TabItem(id: '21', title: '童装'),
+    TabItem(id: '22', title: '装修定制'),
+    TabItem(id: '23', title: '工业品'),
+    TabItem(id: '24', title: '个人护理'),
+    TabItem(id: '25', title: '文具'),
+    TabItem(id: '26', title: '奢侈品'),
+    TabItem(id: '27', title: '拍拍二手'),
+    TabItem(id: '28', title: '女装'),
+    TabItem(id: '29', title: '家庭清洁'),
+    TabItem(id: '30', title: '粮油调味'),
+    TabItem(id: '31', title: '生活旅行'),
+    TabItem(id: '32', title: '家纺'),
+    TabItem(id: '33', title: '宠物'),
+    TabItem(id: '34', title: '女鞋'),
+    TabItem(id: '35', title: '生鲜'),
+    TabItem(id: '36', title: '男鞋'),
+    TabItem(id: '37', title: '自有品牌'),
+    TabItem(id: '38', title: '医药健康'),
+    TabItem(id: '39', title: '钟表眼镜'),
+    TabItem(id: '40', title: '鲜花绿植'),
+  ];
+
     return Container(
       color: Colors.white,
       child: HorizontalTabs(
-        tabs: _horizontalTabs,
-        currentIndex: _horizontalTabIndex,
+        tabs: horizontalTabs,
+        currentIndex: currentIndex,
         onTap: (index) {
-          setState(() {
-            _horizontalTabIndex = index;
-          });
+          ref.read(homeHorizontalTabProvider.notifier).state = index;
         },
         height: 40,
         spacing: 12,
@@ -365,6 +369,65 @@ class _HomePageContentState extends State<_HomePageContent> {
           overflow: TextOverflow.ellipsis,
         ),
       ],
+    );
+  }
+
+  /// 构建商品列表
+  Widget _buildProductList() {
+    return Consumer(
+      builder: (context, ref, child) {
+        final products = ref.watch(homeProductsProvider);
+
+        return ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemCount: products.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 8),
+          itemBuilder: (context, index) {
+            final product = products[index];
+            return _buildProductCard(product);
+          },
+        );
+      },
+    );
+  }
+
+  /// 构建单个商品卡片
+  Widget _buildProductCard(Product product) {
+    // 价格转换：分 -> 元
+    final price = product.price / 100;
+    final originalPrice = product.originalPrice != null
+        ? product.originalPrice! / 100
+        : null;
+
+    // 格式化评价数和销量
+    final reviewCount = product.commentCount > 0
+        ? '${product.commentCount >= 1000 ? '${(product.commentCount / 1000).toStringAsFixed(1)}k+' : '${product.commentCount}+'}条评论'
+        : null;
+    final salesCount = product.soldCount > 0
+        ? '已售${product.soldCount >= 10000 ? '${(product.soldCount / 10000).toStringAsFixed(1)}万+' : '${product.soldCount}+'}'
+        : null;
+
+    return UniversalProductCard(
+      image: NetworkImage(product.coverImage ?? ''),
+      title: product.name,
+      price: price,
+      originalPrice: originalPrice,
+      reviewCount: reviewCount,
+      salesCount: salesCount,
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('查看商品: ${product.name}')),
+        );
+      },
+      actionButtonText: '立即抢购',
+      actionButtonColor: Colors.red,
+      onActionTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('立即抢购: ${product.name}')),
+        );
+      },
     );
   }
 }

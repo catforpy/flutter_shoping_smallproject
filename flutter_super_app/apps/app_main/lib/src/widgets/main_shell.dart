@@ -16,6 +16,9 @@ final discoveryTabProvider = StateProvider<int>((ref) => 0);
 /// 学习页面标签状态 Provider
 final studyTabProvider = StateProvider<int>((ref) => 0);
 
+/// 首页横向标签状态 Provider
+final homeHorizontalTabProvider = StateProvider<int>((ref) => 0);
+
 // ==================== 主应用壳 ====================
 
 /// 主应用壳（带底部导航栏和顶部导航栏）
