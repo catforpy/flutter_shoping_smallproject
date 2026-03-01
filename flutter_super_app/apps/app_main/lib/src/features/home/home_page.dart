@@ -150,7 +150,6 @@ class _HomePageContent extends ConsumerWidget {
     return Container(
       color: Colors.grey.withValues(alpha: 0.05),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           // 搜索框区域
           const _HomeSearchBar(),
@@ -161,8 +160,10 @@ class _HomePageContent extends ConsumerWidget {
           // 可展开网格轮播组件（会推开下面的内容）
           _buildExpandableGrid(context),
 
-          // 商品列表区域
-          _buildProductList(context),
+          // 商品列表区域（可滚动）
+          Expanded(
+            child: _buildProductList(context),
+          ),
         ],
       ),
     );
@@ -333,8 +334,6 @@ class _HomePageContent extends ConsumerWidget {
         final products = ref.watch(homeProductsProvider);
 
         return ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(vertical: 8),
           itemCount: products.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
