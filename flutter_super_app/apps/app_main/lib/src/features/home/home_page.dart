@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:service_commerce/service_commerce.dart';
 import 'package:ui_components/ui_components.dart';
 import '../../pages/search_page.dart';
-import '../providers/home_product_provider.dart';
+import '../../widgets/main_shell.dart';
+import 'providers/home_product_provider.dart';
 
 /// 首页
 ///
@@ -144,53 +145,6 @@ class _HomePageContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 首页横向滑动标签列表
-    final List<TabItem> horizontalTabs = const [
-    TabItem(id: '0', title: '推荐'),
-    TabItem(id: '1', title: '新人补贴'),
-    TabItem(id: '2', title: '大家电'),
-    TabItem(id: '3', title: '手机'),
-    TabItem(id: '4', title: '电脑办公'),
-    TabItem(id: '5', title: '酒水'),
-    TabItem(id: '6', title: '小家电'),
-    TabItem(id: '7', title: '食品饮料'),
-    TabItem(id: '8', title: '美妆'),
-    TabItem(id: '9', title: '数码'),
-    TabItem(id: '10', title: '运动'),
-    TabItem(id: '11', title: '全球购'),
-    TabItem(id: '12', title: '男装'),
-    TabItem(id: '13', title: '箱包皮具'),
-    TabItem(id: '14', title: '家居厨具'),
-    TabItem(id: '15', title: '爱车'),
-    TabItem(id: '16', title: '珠宝首饰'),
-    TabItem(id: '17', title: '玩具乐器'),
-    TabItem(id: '18', title: '房产'),
-    TabItem(id: '19', title: '图书'),
-    TabItem(id: '20', title: '内衣'),
-    TabItem(id: '21', title: '童装'),
-    TabItem(id: '22', title: '装修定制'),
-    TabItem(id: '23', title: '工业品'),
-    TabItem(id: '24', title: '个人护理'),
-    TabItem(id: '25', title: '文具'),
-    TabItem(id: '26', title: '奢侈品'),
-    TabItem(id: '27', title: '拍拍二手'),
-    TabItem(id: '28', title: '女装'),
-    TabItem(id: '29', title: '家庭清洁'),
-    TabItem(id: '30', title: '粮油调味'),
-    TabItem(id: '31', title: '生活旅行'),
-    TabItem(id: '32', title: '家纺'),
-    TabItem(id: '33', title: '宠物'),
-    TabItem(id: '34', title: '女鞋'),
-    TabItem(id: '35', title: '生鲜'),
-    TabItem(id: '36', title: '男鞋'),
-    TabItem(id: '37', title: '自有品牌'),
-    TabItem(id: '38', title: '医药健康'),
-    TabItem(id: '39', title: '钟表眼镜'),
-    TabItem(id: '40', title: '鲜花绿植'),
-  ];
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     final horizontalTabIndex = ref.watch(homeHorizontalTabProvider);
 
     return Container(
@@ -202,20 +156,20 @@ class _HomePageContent extends ConsumerWidget {
           const _HomeSearchBar(),
 
           // 横向滑动标签栏
-          _buildHorizontalTabs(horizontalTabIndex, ref),
+          _buildHorizontalTabs(context, horizontalTabIndex, ref),
 
           // 可展开网格轮播组件（会推开下面的内容）
-          _buildExpandableGrid(),
+          _buildExpandableGrid(context),
 
           // 商品列表区域
-          _buildProductList(),
+          _buildProductList(context),
         ],
       ),
     );
   }
 
   /// 构建横向滑动标签栏
-  Widget _buildHorizontalTabs(int currentIndex, WidgetRef ref) {
+  Widget _buildHorizontalTabs(BuildContext context, int currentIndex, WidgetRef ref) {
     // 首页横向滑动标签列表
     final List<TabItem> horizontalTabs = const [
     TabItem(id: '0', title: '推荐'),
@@ -295,7 +249,7 @@ class _HomePageContent extends ConsumerWidget {
   }
 
   /// 构建可展开网格轮播组件
-  Widget _buildExpandableGrid() {
+  Widget _buildExpandableGrid(BuildContext context) {
     // 定义分类数据（名称 + 图标）
     final categoryData = [
       ('品质外卖', Icons.restaurant),
@@ -373,7 +327,7 @@ class _HomePageContent extends ConsumerWidget {
   }
 
   /// 构建商品列表
-  Widget _buildProductList() {
+  Widget _buildProductList(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         final products = ref.watch(homeProductsProvider);
@@ -386,7 +340,7 @@ class _HomePageContent extends ConsumerWidget {
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final product = products[index];
-            return _buildProductCard(product);
+            return _buildProductCard(context, product);
           },
         );
       },
@@ -394,7 +348,7 @@ class _HomePageContent extends ConsumerWidget {
   }
 
   /// 构建单个商品卡片
-  Widget _buildProductCard(Product product) {
+  Widget _buildProductCard(BuildContext context, Product product) {
     // 价格转换：分 -> 元
     final price = product.price / 100;
     final originalPrice = product.originalPrice != null

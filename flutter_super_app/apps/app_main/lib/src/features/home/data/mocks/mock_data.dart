@@ -88,7 +88,8 @@ class MockData {
   ///
   /// 对应后端 API: GET /api/home/products
   static List<Product> getHomeProducts() {
-    return const [
+    final now = DateTime.now();
+    return [
       Product(
         id: '1',
         sellerId: 'seller_001',
@@ -106,7 +107,7 @@ class MockData {
         likeCount: 20000,
         commentCount: 5000,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '2',
@@ -125,7 +126,7 @@ class MockData {
         likeCount: 15000,
         commentCount: 3000,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '3',
@@ -144,7 +145,7 @@ class MockData {
         likeCount: 30000,
         commentCount: 6000,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '4',
@@ -163,7 +164,7 @@ class MockData {
         likeCount: 5000,
         commentCount: 1000,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '5',
@@ -182,7 +183,7 @@ class MockData {
         likeCount: 10000,
         commentCount: 2000,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '6',
@@ -201,7 +202,7 @@ class MockData {
         likeCount: 40000,
         commentCount: 8000,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '7',
@@ -220,7 +221,7 @@ class MockData {
         likeCount: 12000,
         commentCount: 2500,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
       Product(
         id: '8',
@@ -239,7 +240,7 @@ class MockData {
         likeCount: 6000,
         commentCount: 1200,
         status: ProductStatus.onSale,
-        createdAt: null,
+        createdAt: now,
       ),
     ];
   }
