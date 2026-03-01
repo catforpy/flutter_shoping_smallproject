@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:ui_components/ui_components.dart';
-import '../../pages/search_page.dart';
+import '../../../pages/search_page.dart';
 import '../theme/home_theme.dart';
 
 /// 首页搜索框组件
