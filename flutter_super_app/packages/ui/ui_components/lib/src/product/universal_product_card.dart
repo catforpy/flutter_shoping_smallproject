@@ -172,7 +172,7 @@ class UniversalProductCard extends StatelessWidget {
   /// 内容宽度比例（默认3，左侧主图2）
   final int contentFlex;
 
-  /// 主图高度（默认null，自适应）
+  /// 主图高度（默认100）
   final double? imageHeight;
 
   const UniversalProductCard({
@@ -238,25 +238,23 @@ class UniversalProductCard extends StatelessWidget {
                 ]
               : null,
         ),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 左侧：主图区
-              Expanded(
-                flex: imageFlex,
-                child: _buildImageSection(),
-              ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 左侧：主图区
+            Expanded(
+              flex: imageFlex,
+              child: _buildImageSection(),
+            ),
 
-              const SizedBox(width: 12),
+            const SizedBox(width: 12),
 
-              // 右侧：内容区
-              Expanded(
-                flex: contentFlex,
-                child: _buildContentSection(),
-              ),
-            ],
-          ),
+            // 右侧：内容区
+            Expanded(
+              flex: contentFlex,
+              child: _buildContentSection(),
+            ),
+          ],
         ),
       ),
     );
@@ -265,7 +263,7 @@ class UniversalProductCard extends StatelessWidget {
   /// 构建主图区
   Widget _buildImageSection() {
     return SizedBox(
-      height: imageHeight,
+      height: imageHeight ?? 100, // 默认高度100
       child: Stack(
         children: [
           // 主图

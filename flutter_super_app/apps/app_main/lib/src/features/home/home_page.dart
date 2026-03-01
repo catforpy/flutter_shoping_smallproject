@@ -370,6 +370,7 @@ class _HomePageContent extends ConsumerWidget {
       originalPrice: originalPrice,
       reviewCount: reviewCount,
       salesCount: salesCount,
+      imageHeight: 100, // 固定图片高度，避免 IntrinsicHeight 错误
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('查看商品: ${product.name}')),
