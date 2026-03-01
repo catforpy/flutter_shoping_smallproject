@@ -50,118 +50,143 @@ class MasonryProductDemoPage extends StatelessWidget {
       case 0:
         // 样式1：基础卡片 + 角标
         return MasonryProductCard(
-          data: MasonryProductCardData(
-            title: product.name,
-            subtitle: _getSubtitle(product),
-            image: NetworkImage(product.coverImage ?? ''),
-            price: product.priceInYuan,
-            originalPrice: product.originalPriceInYuan,
-            cornerBadge: '自营',
-          ),
+          data: _buildBasicCard(product, '自营'),
         );
 
       case 1:
         // 样式2：基础卡片 + 角标 + 标签
         return MasonryProductCard(
-          data: MasonryProductCardData(
-            title: product.name,
-            subtitle: _getSubtitle(product),
-            image: NetworkImage(product.coverImage ?? ''),
-            price: product.priceInYuan,
-            originalPrice: product.originalPriceInYuan,
-            cornerBadge: '京东自营',
-            cornerBadgeColor: Colors.red,
-            tags: [
-              MasonryProductCardTag(
-                text: '7天无理由退货',
-                bgColor: Colors.green.shade50,
-                textColor: Colors.green.shade700,
-                borderColor: Colors.green.shade200,
-              ),
-            ],
-          ),
+          data: _buildCardWithTags(product),
         );
 
       case 2:
         // 样式3：基础卡片 + 角标 + 服务
         return MasonryProductCard(
-          data: MasonryProductCardData(
-            title: product.name,
-            subtitle: _getSubtitle(product),
-            image: NetworkImage(product.coverImage ?? ''),
-            price: product.priceInYuan,
-            originalPrice: product.originalPriceInYuan,
-            cornerBadge: '包邮',
-            cornerBadgeColor: Colors.orange,
-            services: [
-              MasonryProductCardTag(
-                text: '买贵双倍赔',
-                bgColor: Colors.orange.shade50,
-                textColor: Colors.orange.shade700,
-              ),
-              MasonryProductCardTag(
-                text: '6期免息',
-                bgColor: Colors.orange.shade50,
-                textColor: Colors.orange.shade700,
-              ),
-            ],
-          ),
+          data: _buildCardWithServices(product),
         );
 
       case 3:
         // 样式4：完整卡片（角标 + 标签 + 服务）
         return MasonryProductCard(
-          data: MasonryProductCardData(
-            title: product.name,
-            subtitle: _getSubtitle(product),
-            image: NetworkImage(product.coverImage ?? ''),
-            price: product.priceInYuan,
-            originalPrice: product.originalPriceInYuan,
-            cornerBadge: '百亿补贴',
-            cornerBadgeColor: Colors.red,
-            tags: [
-              MasonryProductCardTag(
-                text: '新品',
-                bgColor: Colors.red.shade50,
-                textColor: Colors.red.shade700,
-                borderColor: Colors.red.shade200,
-              ),
-              MasonryProductCardTag(
-                text: '赠品',
-                bgColor: Colors.purple.shade50,
-                textColor: Colors.purple.shade700,
-                borderColor: Colors.purple.shade200,
-              ),
-            ],
-            services: [
-              MasonryProductCardTag(
-                text: '包邮',
-                bgColor: Colors.orange.shade50,
-                textColor: Colors.orange.shade700,
-              ),
-              MasonryProductCardTag(
-                text: '先用后付',
-                bgColor: Colors.blue.shade50,
-                textColor: Colors.blue.shade700,
-              ),
-            ],
-          ),
+          data: _buildFullCard(product),
         );
 
       default:
         // 样式5：带浮标
         return MasonryProductCard(
-          data: MasonryProductCardData(
-            title: product.name,
-            subtitle: _getSubtitle(product),
-            image: NetworkImage(product.coverImage ?? ''),
-            price: product.priceInYuan,
-            originalPrice: product.originalPriceInYuan,
-            cornerBadge: '自营',
-            floatingBadge: _buildFloatingBadge(),
-          ),
+          data: _buildCardWithFloatingBadge(product),
         );
     }
+  }
+
+  /// 构建基础卡片
+  MasonryProductCardData _buildBasicCard(Product product, String badge) {
+    return MasonryProductCardData(
+      title: product.name,
+      subtitle: _getSubtitle(product),
+      image: NetworkImage(product.coverImage ?? ''),
+      price: product.priceInYuan,
+      originalPrice: product.originalPriceInYuan,
+      cornerBadge: badge,
+    );
+  }
+
+  /// 构建带标签的卡片
+  MasonryProductCardData _buildCardWithTags(Product product) {
+    return MasonryProductCardData(
+      title: product.name,
+      subtitle: _getSubtitle(product),
+      image: NetworkImage(product.coverImage ?? ''),
+      price: product.priceInYuan,
+      originalPrice: product.originalPriceInYuan,
+      cornerBadge: '京东自营',
+      cornerBadgeColor: Colors.red,
+      tags: [
+        MasonryProductCardTag(
+          text: '7天无理由退货',
+          bgColor: Colors.green.shade50,
+          textColor: Colors.green.shade700,
+          borderColor: Colors.green.shade200,
+        ),
+      ],
+    );
+  }
+
+  /// 构建带服务的卡片
+  MasonryProductCardData _buildCardWithServices(Product product) {
+    return MasonryProductCardData(
+      title: product.name,
+      subtitle: _getSubtitle(product),
+      image: NetworkImage(product.coverImage ?? ''),
+      price: product.priceInYuan,
+      originalPrice: product.originalPriceInYuan,
+      cornerBadge: '包邮',
+      cornerBadgeColor: Colors.orange,
+      services: [
+        MasonryProductCardTag(
+          text: '买贵双倍赔',
+          bgColor: Colors.orange.shade50,
+          textColor: Colors.orange.shade700,
+        ),
+        MasonryProductCardTag(
+          text: '6期免息',
+          bgColor: Colors.orange.shade50,
+          textColor: Colors.orange.shade700,
+        ),
+      ],
+    );
+  }
+
+  /// 构建完整卡片
+  MasonryProductCardData _buildFullCard(Product product) {
+    return MasonryProductCardData(
+      title: product.name,
+      subtitle: _getSubtitle(product),
+      image: NetworkImage(product.coverImage ?? ''),
+      price: product.priceInYuan,
+      originalPrice: product.originalPriceInYuan,
+      cornerBadge: '百亿补贴',
+      cornerBadgeColor: Colors.red,
+      tags: [
+        MasonryProductCardTag(
+          text: '新品',
+          bgColor: Colors.red.shade50,
+          textColor: Colors.red.shade700,
+          borderColor: Colors.red.shade200,
+        ),
+        MasonryProductCardTag(
+          text: '赠品',
+          bgColor: Colors.purple.shade50,
+          textColor: Colors.purple.shade700,
+          borderColor: Colors.purple.shade200,
+        ),
+      ],
+      services: [
+        MasonryProductCardTag(
+          text: '包邮',
+          bgColor: Colors.orange.shade50,
+          textColor: Colors.orange.shade700,
+        ),
+        MasonryProductCardTag(
+          text: '先用后付',
+          bgColor: Colors.blue.shade50,
+          textColor: Colors.blue.shade700,
+        ),
+      ],
+    );
+  }
+
+  /// 构建带浮标的卡片
+  MasonryProductCardData _buildCardWithFloatingBadge(Product product) {
+    return MasonryProductCardData(
+      title: product.name,
+      subtitle: _getSubtitle(product),
+      image: NetworkImage(product.coverImage ?? ''),
+      price: product.priceInYuan,
+      originalPrice: product.originalPriceInYuan,
+      cornerBadge: '自营',
+      floatingBadge: _buildFloatingBadge(),
+    );
   }
 
   /// 从规格信息中提取副标题

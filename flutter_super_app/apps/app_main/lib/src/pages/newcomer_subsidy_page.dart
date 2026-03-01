@@ -179,25 +179,25 @@ class _NewcomerSubsidyTabPage extends StatelessWidget {
         mainAxisSpacing: HomeTheme.productCardSpacing,
         crossAxisSpacing: HomeTheme.productCardSpacing,
         padding: const EdgeInsets.symmetric(
-          horizontal: HomeTheme.horizontalSpacing,
+          horizontal: HomeTheme.spacing16,
           vertical: HomeTheme.spacing8,
         ),
-        children: _buildProductCards(products),
+        children: _buildProductCards(context, products),
       ),
     );
   }
 
   /// 构建商品卡片列表
-  List<Widget> _buildProductCards(List<Product> products) {
+  List<Widget> _buildProductCards(BuildContext context, List<Product> products) {
     return products.map((product) {
       return MasonryProductCard(
-        data: _buildMasonryCardData(product),
+        data: _buildMasonryCardData(context, product),
       );
     }).toList();
   }
 
   /// 构建 MasonryProductCardData
-  MasonryProductCardData _buildMasonryCardData(Product product) {
+  MasonryProductCardData _buildMasonryCardData(BuildContext context, Product product) {
     return MasonryProductCardData(
       title: product.name,
       subtitle: _getSubtitle(product),
