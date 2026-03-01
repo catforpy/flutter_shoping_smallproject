@@ -5,6 +5,9 @@ library;
 // 商品卡片
 export 'product_card.dart';
 
+// 通用电商商品卡片
+export 'universal_product_card.dart';
+
 // 商品图片
 export 'product_image.dart';
 
