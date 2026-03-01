@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:ui_components/ui_components.dart';
 import '../theme/home_theme.dart';
+import '../../../pages/newcomer_subsidy_page.dart';
 
 /// 首页横向分类标签组件
 ///
@@ -69,7 +70,15 @@ class HomeCategoryTabs extends StatelessWidget {
       child: HorizontalTabs(
         tabs: categoryTabs,
         currentIndex: currentIndex,
-        onTap: onTap,
+        onTap: (index) {
+          // 点击"新人补贴"标签时跳转到新人补贴页面
+          if (categoryTabs[index].title == '新人补贴') {
+            Navigator.push(context, NewcomerSubsidyPage.route());
+            return;
+          }
+          // 其他标签正常切换
+          onTap(index);
+        },
         height: HomeTheme.horizontalTabsHeight,
         spacing: HomeTheme.horizontalTabsSpacing,
         tabPadding: HomeTheme.horizontalTabsPadding,
