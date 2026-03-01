@@ -166,7 +166,8 @@ class _ExpandableGridPageViewState extends State<ExpandableGridPageView> {
     return widget.topPadding +
         (itemHeight * widget.firstPageRows) +
         (widget.runSpacing * (widget.firstPageRows - 1)) +
-        widget.bottomPadding;
+        widget.bottomPadding +
+        (widget.showIndicator ? 30 : 0); // 指示器的高度
   }
 
   /// 计算第二页的高度
@@ -233,7 +234,18 @@ class _ExpandableGridPageViewState extends State<ExpandableGridPageView> {
     return Container(
       color: Colors.white,
       height: firstPageHeight,
-      child: _buildGrid(displayWidgets, displayCount),
+      child: Column(
+        children: [
+          // 网格内容
+          Expanded(
+            child: _buildGrid(displayWidgets, displayCount),
+          ),
+
+          // 底部指示点
+          if (widget.showIndicator)
+            _buildIndicator(),
+        ],
+      ),
     );
   }
 
@@ -369,14 +381,14 @@ class _ExpandableGridPageViewState extends State<ExpandableGridPageView> {
           (index) {
             final isCurrent = index == _currentPageIndex;
             return Container(
-              width: isCurrent ? 20 : 6,
-              height: 6,
-              margin: const EdgeInsets.symmetric(horizontal: 3),
+              width: isCurrent ? 16 : 4,
+              height: 4,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
                 color: isCurrent
                     ? widget.currentIndicatorColor
                     : widget.indicatorColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(3),
+                borderRadius: BorderRadius.circular(2),
               ),
             );
           },
