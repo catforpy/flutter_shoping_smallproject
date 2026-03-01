@@ -84,7 +84,7 @@ class ExpandableGridPageView extends StatefulWidget {
     this.crossAxisCount = 5,
     this.firstPageRows = 1,
     this.secondPageRows = 3,
-    this.topPadding = 16,
+    this.topPadding = 0,
     this.bottomPadding = 16,
     this.spacing = 12,
     this.runSpacing = 12,

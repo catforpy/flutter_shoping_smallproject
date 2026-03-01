@@ -157,6 +157,9 @@ class _HomePageContent extends ConsumerWidget {
           // 横向滑动标签栏
           _buildHorizontalTabs(context, horizontalTabIndex, ref),
 
+          // 组件间距
+          // const SizedBox(height: 8),
+
           // 可展开网格轮播组件（会推开下面的内容）
           _buildExpandableGrid(context),
 
@@ -280,26 +283,29 @@ class _HomePageContent extends ConsumerWidget {
       return _buildCategoryItem(data.$1, data.$2);
     }).toList();
 
-    return ExpandableGridPageView(
-      children: categoryWidgets,
-      crossAxisCount: 5,
-      firstPageRows: 1,
-      secondPageRows: 3,
-      topPadding: 16,
-      bottomPadding: 8,
-      spacing: 8,
-      runSpacing: 16,
-      onTap: (index) {
-        final categoryName = categoryData[index].$1;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('点击了：$categoryName')),
-        );
-      },
-      onMoreTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('查看全部频道')),
-        );
-      },
+    return Container(
+      color: Colors.white,
+      child: ExpandableGridPageView(
+        children: categoryWidgets,
+        crossAxisCount: 5,
+        firstPageRows: 1,
+        secondPageRows: 3,
+        topPadding: 0,
+        bottomPadding: 8,
+        spacing: 8,
+        runSpacing: 16,
+        onTap: (index) {
+          final categoryName = categoryData[index].$1;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('点击了：$categoryName')),
+          );
+        },
+        onMoreTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('查看全部频道')),
+          );
+        },
+      ),
     );
   }
 
